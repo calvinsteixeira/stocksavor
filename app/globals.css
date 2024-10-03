@@ -20,7 +20,7 @@ body {
     --card-foreground: 30 20% 20%; /* Marrom escuro */
     --popover: 120 20% 100%; /* Branco */
     --popover-foreground: 30 20% 20%; /* Marrom escuro */
-    --primary: 30 100% 50%; /* Laranja suave */
+    --primary: 4 82% 56%; /* Laranja suave */
     --primary-foreground: 0 0% 98%; /* Branco */
     --secondary: 120 10% 90%; /* Verde muito claro */
     --secondary-foreground: 30 20% 20%; /* Marrom escuro */
@@ -76,6 +76,6 @@ body {
     @apply bg-background text-foreground;
   }
   main {
-    @apply px-6 pt-4;
+    @apply px-6 pt-8;
   }
 }
