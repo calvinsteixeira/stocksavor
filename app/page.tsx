@@ -22,7 +22,20 @@ export default function Home() {
             Bem vindo, <span className="font-semibold">Calvin</span>
           </h1>
         </div>
-        <h2 className='mt-12 text-2xl font-extrabold text-primary'>Como deseja começar?</h2>
+        <div className="space-y-8">
+          <h2 className="mt-12 text-2xl font-extrabold text-primary">Como deseja começar?</h2>
+          <div className="grid grid-cols-2 gap-3">
+            <div className='space-y-4'>
+              <div className="rounded-xl h-[14rem] px-4 py-8 bg-red-200">Novo item</div>
+              <div className="rounded-xl h-[10rem] px-4 py-8 bg-emerald-200">Novo item</div>
+            </div>
+            <div className='space-y-4'>
+              <div className="rounded-xl h-[10rem] px-4 py-8 bg-purple-200">Novo item</div>
+              <div className="rounded-xl h-[10rem] px-4 py-8 bg-yellow-200">Novo item</div>
+            </div>
+          </div>
+        </div>
+
         {/* <div>
           <Components.StockStatusChart data={StockStatusChartData} />
         </div> */}
