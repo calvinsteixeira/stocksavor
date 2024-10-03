@@ -5,11 +5,11 @@ import * as Components from '@/components/index';
 import { ChartDataProps } from '@/components/charts/StockStatusChart';
 
 export default function Home() {
-  const StockStatusChartData: ChartDataProps['data'] = [
-    { status: 'notExpired', totalItems: 34, fill: 'var(--color-notExpired)' },
-    { status: 'nearExpiration', totalItems: 12, fill: 'var(--color-nearExpiration)' },
-    { status: 'expired', totalItems: 3, fill: 'var(--color-expired)' },
-  ];
+  // const StockStatusChartData: ChartDataProps['data'] = [
+  //   { status: 'notExpired', totalItems: 34, fill: 'var(--color-notExpired)' },
+  //   { status: 'nearExpiration', totalItems: 12, fill: 'var(--color-nearExpiration)' },
+  //   { status: 'expired', totalItems: 3, fill: 'var(--color-expired)' },
+  // ];
 
   return (
     <div>
