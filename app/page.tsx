@@ -1,16 +1,12 @@
 //COMPONENETS
 import * as Components from '@/components/index';
+import * as Icons from '@/icons';
 
 //UTILS
 import { ChartDataProps } from '@/components/charts/StockStatusChart';
+import { KitchenStaplesProps } from '@/types/Data';
 
 export default function Home() {
-  // const StockStatusChartData: ChartDataProps['data'] = [
-  //   { status: 'notExpired', totalItems: 34, fill: 'var(--color-notExpired)' },
-  //   { status: 'nearExpiration', totalItems: 12, fill: 'var(--color-nearExpiration)' },
-  //   { status: 'expired', totalItems: 3, fill: 'var(--color-expired)' },
-  // ];
-
   const kitchenStaplesData = [
     {
       id: '1',
@@ -44,6 +40,41 @@ export default function Home() {
     },
   ];
 
+  function categorizeStock(kitchenData: typeof kitchenStaplesData): ChartDataProps {
+    const today = new Date();
+    let notExpiredCount = 0;
+    let nearExpirationCount = 0;
+    let expiredCount = 0;
+
+    kitchenData.forEach((item) => {
+      const [day, month, year] = item.expirationDate.split('/').map(Number);
+      const expirationDate = new Date(year, month - 1, day);
+
+      const diffTime = expirationDate.getTime() - today.getTime();
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+      if (diffDays < 0) {
+        expiredCount += 1;
+      } else if (diffDays <= 5) {
+        nearExpirationCount += 1;
+      } else {
+        notExpiredCount += 1;
+      }
+    });
+
+    return {
+      data: [
+        { status: 'notExpired', totalItems: notExpiredCount, fill: 'var(--color-notExpired)' },
+        { status: 'nearExpiration', totalItems: nearExpirationCount, fill: 'var(--color-nearExpiration)' },
+        { status: 'expired', totalItems: expiredCount, fill: 'var(--color-expired)' },
+      ],
+    };
+  }
+
+  const StockStatusChartData = categorizeStock(kitchenStaplesData);
+
+  console.log(StockStatusChartData);
+
   return (
     <div>
       <main>
@@ -57,18 +88,12 @@ export default function Home() {
         </div>
         <div className="space-y-8">
           <h2 className="mt-12 text-2xl font-extrabold text-primary">Como deseja começar?</h2>
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-4">
-              <div className="rounded-xl h-[14rem] px-4 py-8 bg-red-200">Novo item</div>
-              <div className="rounded-xl h-[10rem] px-4 py-8 bg-emerald-200">Novo item</div>
-            </div>
-            <div className="space-y-4">
-              <div className="rounded-xl h-[10rem] px-4 py-8 bg-purple-200">Novo item</div>
-              <div className="rounded-xl h-[10rem] px-4 py-8 bg-yellow-200">Novo item</div>
-            </div>
-          </div>
+          <div></div>
         </div>
         <div className="mt-10 space-y-6">
+          <div className="my-4">
+            <Components.StockStatusChart data={StockStatusChartData.data} />
+          </div>
           <h2 className="font-semibold text-xl">Adicionados recentemente</h2>
           <div>
             <div className="flex justify-between">
@@ -88,9 +113,6 @@ export default function Home() {
           </div>
           <Components.KitchenStaplesList data={kitchenStaplesData} />
         </div>
-        {/* <div>
-          <Components.StockStatusChart data={StockStatusChartData} />
-        </div> */}
       </main>
     </div>
   );
