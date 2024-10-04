@@ -1,10 +1,8 @@
 //COMPONENETS
 import * as Components from '@/components/index';
-import * as Icons from '@/icons';
 
 //UTILS
 import { ChartDataProps } from '@/components/charts/StockStatusChart';
-import { KitchenStaplesProps } from '@/types/Data';
 
 export default function Home() {
   const kitchenStaplesData = [
@@ -72,8 +70,6 @@ export default function Home() {
   }
 
   const StockStatusChartData = categorizeStock(kitchenStaplesData);
-
-  console.log(StockStatusChartData);
 
   return (
     <div>
