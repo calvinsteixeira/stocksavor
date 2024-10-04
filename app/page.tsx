@@ -1,8 +1,11 @@
 //COMPONENETS
 import * as Components from '@/components/index';
+import * as Icons from '@/icons';
+import { Button } from '@/components/ui/button';
 
 //UTILS
 import { ChartDataProps } from '@/components/charts/StockStatusChart';
+import { ButtonProps } from '@/components/ui/button';
 
 export default function Home() {
   const kitchenStaplesData = [
@@ -10,7 +13,7 @@ export default function Home() {
       id: '1',
       name: 'Creme de leite',
       amount: 4,
-      expirationDate: '05/10/2024',
+      expirationDate: '03/10/2024',
     },
     {
       id: '2',
@@ -40,6 +43,12 @@ export default function Home() {
 
   function categorizeStock(kitchenData: typeof kitchenStaplesData): ChartDataProps {
     const today = new Date();
+    today.setHours(0, 0, 0, 0); // Zera a hora para comparação
+
+    // Cria uma nova data que representa a data de hoje + 5 dias
+    const fiveDaysFromToday = new Date(today);
+    fiveDaysFromToday.setDate(today.getDate() + 5);
+
     let notExpiredCount = 0;
     let nearExpirationCount = 0;
     let expiredCount = 0;
@@ -47,16 +56,15 @@ export default function Home() {
     kitchenData.forEach((item) => {
       const [day, month, year] = item.expirationDate.split('/').map(Number);
       const expirationDate = new Date(year, month - 1, day);
+      expirationDate.setHours(0, 0, 0, 0); // Zera a hora da data de validade
 
-      const diffTime = expirationDate.getTime() - today.getTime();
-      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-
-      if (diffDays < 0) {
-        expiredCount += 1;
-      } else if (diffDays <= 5) {
-        nearExpirationCount += 1;
+      // Compara as datas
+      if (expirationDate < today) {
+        expiredCount += 1; // Vencido
+      } else if (expirationDate <= fiveDaysFromToday) {
+        nearExpirationCount += 1; // Perto de vencer
       } else {
-        notExpiredCount += 1;
+        notExpiredCount += 1; // Não vencido
       }
     });
 
@@ -84,7 +92,16 @@ export default function Home() {
         </div>
         <div className="space-y-8">
           <h2 className="mt-12 text-2xl font-extrabold text-primary">Como deseja começar?</h2>
-          <div></div>
+          <div className="flex gap-3 justify-between items-center">
+            <Button className="flex-1 bg-green-400 gap-2">
+              <Icons.Plus strokeWidth={1} />
+              novo item
+            </Button>
+            <Button className="flex-1 bg-orange-400 gap-2">
+              <Icons.Box strokeWidth={1} />
+              meu estoque
+            </Button>
+          </div>
         </div>
         <div className="mt-10 space-y-6">
           <div className="my-4">

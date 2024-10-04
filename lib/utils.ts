@@ -24,16 +24,33 @@ export function getExpirationStatus(date: string): { message: string; color: str
   const diffTime = productDate.getTime() - today.getTime();
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-  if (diffDays > 0) {
+  if (diffDays >= 0) {
+    if (diffDays > 0) {
+      return {
+        message: `Vence em ${diffDays} dia${diffDays > 1 ? 's' : ''}`,
+        color: diffDays <= 8 ? '#df972a' : '#278727'
+      };
+    } else {
+      return {
+        message: `Vence hoje`,
+        color: diffDays <= 8 ? '#df972a' : '#278727'
+      };
+    }
+
+  }
+
+  if (diffDays == 1) {
     return {
-      message: `Vence em ${diffDays} dias`,
-      color: diffDays <= 8 ? '#df972a' : '#278727'
+      message: `Vencido há ${Math.abs(diffDays)} dia${diffDays > 1 ? 's' : ''} `,
+      color: '#a93232'
+    };
+  } else {
+    return {
+      message: `Venceu ontem`,
+      color: '#a93232'
     };
   }
 
-  return {
-    message: `Vencido há ${Math.abs(diffDays)} dias`,
-    color: '#a93232'
-  };
+
 }
 
