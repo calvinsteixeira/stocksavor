@@ -87,12 +87,12 @@ export default function Home() {
           <div className="bg-foreground w-16 h-16 rounded-full relative border-2 border-primary">
             <div className="absolute z-10 w-16 h-16 rounded-full border-4 border-background "></div>
             <Image
-                src={'/profile.jpg'}
-                alt="Imagem com elementos arredondados nos cantos em cores claras."
-                objectFit="cover"
-                fill
-                className="z-0 absolute rounded-full"
-              />
+              src={'/profile.jpg'}
+              alt="Imagem com elementos arredondados nos cantos em cores claras."
+              objectFit="cover"
+              fill
+              className="z-0 absolute rounded-full"
+            />
           </div>
           <h1 className="text-xl">
             Bem vindo, <span className="font-semibold">Fulano</span>
@@ -133,6 +133,11 @@ export default function Home() {
             </div>
           </div>
           <Components.KitchenStaplesList data={kitchenStaplesData} />
+          <div className="flex w-full justify-center">
+            <Button variant={'link'} className='text-foreground'>
+              Acessar lista completa
+            </Button>
+          </div>
         </div>
       </main>
     </div>
