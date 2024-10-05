@@ -2,6 +2,7 @@
 import * as Components from '@/components/index';
 import * as Icons from '@/icons';
 import { Button } from '@/components/ui/button';
+import Image from 'next/image';
 
 //UTILS
 import { ChartDataProps } from '@/components/charts/StockStatusChart';
@@ -85,19 +86,26 @@ export default function Home() {
         <div className="flex gap-4 items-center rounded-md space-y-2">
           <div className="bg-foreground w-16 h-16 rounded-full relative border-2 border-primary">
             <div className="absolute z-10 w-16 h-16 rounded-full border-4 border-background "></div>
+            <Image
+                src={'/profile.jpg'}
+                alt="Imagem com elementos arredondados nos cantos em cores claras."
+                objectFit="cover"
+                fill
+                className="z-0 absolute rounded-full"
+              />
           </div>
           <h1 className="text-xl">
-            Bem vindo, <span className="font-semibold">Calvin</span>
+            Bem vindo, <span className="font-semibold">Fulano</span>
           </h1>
         </div>
         <div className="space-y-8">
-          <h2 className="mt-12 text-2xl font-extrabold text-primary">Como deseja começar?</h2>
+          <h2 className="mt-12 text-2xl font-extrabold text-primary">Seu dashboard</h2>
           <div className="flex gap-3 justify-between items-center">
-            <Button className="flex-1 bg-green-400 gap-2">
+            <Button className="flex-1 bg-primary gap-2">
               <Icons.Plus strokeWidth={1} />
               novo item
             </Button>
-            <Button className="flex-1 bg-orange-400 gap-2">
+            <Button className="flex-1 bg-[#10b981] gap-2">
               <Icons.Box strokeWidth={1} />
               meu estoque
             </Button>
@@ -111,15 +119,15 @@ export default function Home() {
           <div>
             <div className="flex justify-between">
               <div className="flex gap-2 items-center">
-                <div className="size-2 rounded-full bg-[#278727]"></div>
+                <div className="size-2 rounded-full bg-[#10b981]"></div>
                 <p className="text-sm">No prazo</p>
               </div>
               <div className="flex gap-2 items-center">
-                <div className="size-2 rounded-full bg-[#df972a]"></div>
+                <div className="size-2 rounded-full bg-[#b99d10]"></div>
                 <p className="text-sm">Próximo de vencer</p>
               </div>
               <div className="flex gap-2 items-center">
-                <div className="size-2 rounded-full bg-[#a93232]"></div>
+                <div className="size-2 rounded-full bg-[#b91010]"></div>
                 <p className="text-sm">Vencido</p>
               </div>
             </div>

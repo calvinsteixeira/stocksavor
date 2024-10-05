@@ -1,6 +1,5 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
-import { ExpirationStatus } from "@/types/Utils";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -28,27 +27,27 @@ export function getExpirationStatus(date: string): { message: string; color: str
     if (diffDays > 0) {
       return {
         message: `Vence em ${diffDays} dia${diffDays > 1 ? 's' : ''}`,
-        color: diffDays <= 8 ? '#df972a' : '#278727'
+        color: diffDays <= 8 ? '#b99d10' : '#10b981'
       };
     } else {
       return {
         message: `Vence hoje`,
-        color: diffDays <= 8 ? '#df972a' : '#278727'
+        color: diffDays <= 8 ? '#b99d10' : '#10b981'
       };
     }
-
   }
 
   if (diffDays == 1) {
     return {
-      message: `Vencido há ${Math.abs(diffDays)} dia${diffDays > 1 ? 's' : ''} `,
-      color: '#a93232'
+      message: `Venceu ontem`,
+      color: '#b91010'
     };
   } else {
     return {
-      message: `Venceu ontem`,
-      color: '#a93232'
+      message: `Vencido há ${Math.abs(diffDays)} dia${diffDays > 1 ? 's' : ''} `,
+      color: '#b91010'
     };
+
   }
 
 

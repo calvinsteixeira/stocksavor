@@ -20,15 +20,15 @@ export interface ChartDataProps {
 const chartConfig = {
   notExpired: {
     label: 'Não vencido',
-    color: '#278727',
+    color: '#10b981',
   },
   nearExpiration: {
     label: 'Próximo de vencer',
-    color: '#df972a',
+    color: '#b99d10',
   },
   expired: {
     label: 'Vencido',
-    color: '#a93232',
+    color: '#b91010',
   },
 } satisfies ChartConfig;
 
