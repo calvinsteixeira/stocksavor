@@ -4,5 +4,4 @@ export type KitchenStaplesProps = {
   amount: number;
   description?: string;
   expirationDate: string;
-  isExpired?: boolean;
 }

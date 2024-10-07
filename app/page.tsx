@@ -6,10 +6,10 @@ import Image from 'next/image';
 
 //UTILS
 import { ChartDataProps } from '@/components/charts/StockStatusChart';
-import { ButtonProps } from '@/components/ui/button';
+import { KitchenStaplesProps } from '@/types/Data'
 
 export default function Home() {
-  const kitchenStaplesData = [
+  const kitchenStaplesData: KitchenStaplesProps[] = [
     {
       id: '1',
       name: 'Creme de leite',
