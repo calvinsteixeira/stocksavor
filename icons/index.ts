@@ -1,1 +1,1 @@
-export { Apple, TicketCheck, Plus, Box } from 'lucide-react'
+export { Apple, TicketCheck, Plus, Box, ArrowLeft } from 'lucide-react'

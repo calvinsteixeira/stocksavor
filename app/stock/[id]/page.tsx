@@ -5,6 +5,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import * as Icons from '@/icons';
 
 //UTILS
 import React from 'react';
@@ -12,12 +13,19 @@ import { useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { format, parse } from 'date-fns';
+import { useRouter } from 'next/router';
 
 const productSchema = yup.object({
   name: yup.string().required('campo obrigatório'),
   description: yup.string(),
   expirationDate: yup.string().required('campo obrigatório'),
-  amount: yup.number().positive().integer().required('campo obrigatório'),
+  amount: yup
+    .number()
+    .typeError('Informe um valor válido')
+    .positive('Informe um valor maior do que 0')
+    .integer('Informe um número válido')
+    .required('campo obrigatório'),
 });
 
 type FormData = yup.InferType<typeof productSchema>;
@@ -25,8 +33,26 @@ type FormData = yup.InferType<typeof productSchema>;
 type Props = {};
 
 export default function page(props: Props) {
+  const router = useRouter();
+
+  const data = {
+    id: '1',
+    description: '',
+    name: 'Creme de leite',
+    amount: 4,
+    expirationDate: '03/10/2024',
+  };
+
+  const [editMode, setEditMode] = React.useState<boolean>(false);
+
   const form = useForm<FormData>({
     resolver: yupResolver(productSchema),
+    defaultValues: {
+      name: data.name,
+      amount: data.amount,
+      description: data.description,
+      expirationDate: format(parse(data.expirationDate, 'dd/MM/yyyy', new Date()), 'yyyy-MM-dd'),
+    },
   });
 
   const updateProduct = (data: FormData) => console.log(data);
@@ -36,7 +62,11 @@ export default function page(props: Props) {
 
   return (
     <div>
-      <main>
+      <main className="space-y-12">
+        <div className="flex items-center py-4  bg-primary text-primary-foreground rounded-tl-3xl rounded-br-3xl relative">
+          <Icons.ArrowLeft className="absolute left-4 t-0 text-primary-foreground" onClick={() => router.push('/')} />
+          <h2 className="text-center w-full text-2xl font-extrabold">Detalhes do item</h2>
+        </div>
         <div>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(updateProduct)} className="space-y-4">
@@ -47,7 +77,7 @@ export default function page(props: Props) {
                   <FormItem>
                     <FormLabel>Nome</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input readOnly={!editMode} disabled={!editMode} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -60,8 +90,8 @@ export default function page(props: Props) {
                   <FormItem>
                     <FormLabel>Descrição</FormLabel>
                     <FormControl>
-                      <Textarea {...field} />
-                    </FormControl> 
+                      <Textarea readOnly={!editMode} disabled={!editMode} {...field} />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -74,7 +104,7 @@ export default function page(props: Props) {
                     <FormItem className="w-[60%]">
                       <FormLabel>Data de validade</FormLabel>
                       <FormControl>
-                        <Input type="date" {...field} />
+                        <Input readOnly={!editMode} disabled={!editMode} type="date" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -87,14 +117,32 @@ export default function page(props: Props) {
                     <FormItem className="flex-1">
                       <FormLabel>Quantidade</FormLabel>
                       <FormControl>
-                        <Input type="number" {...field} />
+                        <Input readOnly={!editMode} disabled={!editMode} type="number" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
               </div>
-              <Button type="submit">Salvar</Button>
+              <div className="space-x-2">
+                <Button
+                  variant={'secondary'}
+                  onClick={() => {
+                    setEditMode(!editMode);
+                    if (editMode) {
+                      form.reset();
+                    }
+                  }}
+                  type="button"
+                >
+                  {editMode ? 'Cancelar edição' : 'Editar informações'}
+                </Button>
+                {editMode && (
+                  <Button disabled={!editMode} type="submit">
+                    Salvar dados
+                  </Button>
+                )}
+              </div>
             </form>
           </Form>
         </div>
