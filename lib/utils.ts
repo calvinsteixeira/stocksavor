@@ -44,7 +44,7 @@ export function getExpirationStatus(date: string): { message: string; color: str
     };
   } else {
     return {
-      message: `Vencido há ${Math.abs(diffDays)} dia${diffDays > 1 ? 's' : ''} `,
+      message: `Vencido há ${Math.abs(diffDays)} dias`,
       color: '#b91010'
     };
 
