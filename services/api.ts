@@ -14,6 +14,7 @@ export const api = axios.create({
 
 export interface ApiResponse {
   hasError: boolean;
+  status: number;
   message: string;
   data: []
 }

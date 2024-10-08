@@ -37,6 +37,7 @@ export async function get(params: {
     })
     if ([404, 200].includes(result.status)) {
       return {
+        status: result.status,
         hasError: false,
         message: "",
         data: result.data
@@ -47,6 +48,7 @@ export async function get(params: {
   } catch (error: any) {
     console.log(error)
     return {
+      status: 500,
       hasError: true,
       message: error.message,
       data: []
