@@ -6,47 +6,20 @@ import Image from 'next/image';
 
 //UTILS
 import { ChartDataProps } from '@/components/charts/StockStatusChart';
-import { KitchenStaplesProps } from '@/types/Data'
+import { KitchenStaplesProps } from '@/types/Data';
+import { kitchenstaplesActions } from './actions/kitchenstaples';
+import { ApiResponse } from '@/services/api';
 
-export default function Home() {
-  const kitchenStaplesData: KitchenStaplesProps[] = [
-    {
-      id: '1',
-      name: 'Creme de leite',
-      amount: 4,
-      expirationDate: '03/10/2024',
-    },
-    {
-      id: '2',
-      name: 'Nescau',
-      amount: 1,
-      expirationDate: '12/12/2024',
-    },
-    {
-      id: '3',
-      name: 'Leite zero lactose',
-      amount: 2,
-      expirationDate: '25/11/2024',
-    },
-    {
-      id: '4',
-      name: 'Lata de milho',
-      amount: 1,
-      expirationDate: '05/10/2024',
-    },
-    {
-      id: '5',
-      name: 'Lata de milho',
-      amount: 1,
-      expirationDate: '16/10/2024',
-    },
-  ];
+export default async function Home() {
+  const { data: kitchenStaplesData }: ApiResponse = await kitchenstaplesActions.get({
+    start: 0,
+    limit: 5
+  });
 
   function categorizeStock(kitchenData: typeof kitchenStaplesData): ChartDataProps {
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Zera a hora para comparação
+    today.setHours(0, 0, 0, 0);
 
-    // Cria uma nova data que representa a data de hoje + 5 dias
     const fiveDaysFromToday = new Date(today);
     fiveDaysFromToday.setDate(today.getDate() + 5);
 
@@ -54,10 +27,10 @@ export default function Home() {
     let nearExpirationCount = 0;
     let expiredCount = 0;
 
-    kitchenData.forEach((item) => {
+    kitchenData.forEach((item: KitchenStaplesProps) => {
       const [day, month, year] = item.expirationDate.split('/').map(Number);
       const expirationDate = new Date(year, month - 1, day);
-      expirationDate.setHours(0, 0, 0, 0); // Zera a hora da data de validade
+      expirationDate.setHours(0, 0, 0, 0);
 
       // Compara as datas
       if (expirationDate < today) {
@@ -78,7 +51,7 @@ export default function Home() {
     };
   }
 
-  const StockStatusChartData = categorizeStock(kitchenStaplesData);
+  const StockStatusChartData = kitchenStaplesData ? categorizeStock(kitchenStaplesData) : null
 
   return (
     <div>
@@ -105,7 +78,7 @@ export default function Home() {
               <Icons.Plus strokeWidth={1} />
               novo item
             </Button>
-            <Button variant='secondary' className="flex-1 gap-2">
+            <Button variant="secondary" className="flex-1 gap-2">
               <Icons.Box strokeWidth={1} />
               meu estoque
             </Button>
@@ -113,7 +86,7 @@ export default function Home() {
         </div>
         <div className="mt-10 space-y-6">
           <div className="my-4">
-            <Components.StockStatusChart data={StockStatusChartData.data} />
+            <Components.StockStatusChart data={StockStatusChartData?.data || []} />
           </div>
           <h2 className="font-semibold text-xl">Adicionados recentemente</h2>
           <div>
@@ -134,7 +107,7 @@ export default function Home() {
           </div>
           <Components.KitchenStaplesList data={kitchenStaplesData} />
           <div className="flex w-full justify-center">
-            <Button variant={'link'} className='text-foreground'>
+            <Button variant={'link'} className="text-foreground">
               Acessar lista completa
             </Button>
           </div>
