@@ -13,7 +13,7 @@ import { ApiResponse } from '@/services/api';
 export default async function Home() {
   const { data: kitchenStaplesData }: ApiResponse = await kitchenstaplesActions.get({
     start: 0,
-    limit: 5
+    limit: 5,
   });
 
   function categorizeStock(kitchenData: typeof kitchenStaplesData): ChartDataProps {
@@ -51,7 +51,7 @@ export default async function Home() {
     };
   }
 
-  const StockStatusChartData = kitchenStaplesData ? categorizeStock(kitchenStaplesData) : null
+  const StockStatusChartData = kitchenStaplesData ? categorizeStock(kitchenStaplesData) : null;
 
   return (
     <div>
@@ -105,11 +105,21 @@ export default async function Home() {
               </div>
             </div>
           </div>
-          <Components.KitchenStaplesList data={kitchenStaplesData} />
-          <div className="flex w-full justify-center">
-            <Button variant={'link'} className="text-foreground">
-              Acessar lista completa
-            </Button>
+          <div className="pt-6">
+            {kitchenStaplesData.length == 0 ? (
+              <div className='w-full flex items-center justify-center'>
+                <p className="text-center w-[80%]">Sem dados, comece adicionando novos itens</p>
+              </div>
+            ) : (
+              <>
+                <Components.KitchenStaplesList data={kitchenStaplesData} />
+                <div className="flex w-full justify-center items-center">
+                  <Button size={'sm'} variant={'link'} className="text-foreground">
+                    Acessar lista completa
+                  </Button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </main>

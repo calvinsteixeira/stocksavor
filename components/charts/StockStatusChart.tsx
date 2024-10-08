@@ -15,7 +15,7 @@ export interface ChartDataProps {
     totalItems: number;
     fill?: string;
   }[];
-};
+}
 
 const chartConfig = {
   notExpired: {
@@ -36,6 +36,7 @@ export function StockStatusChart(props: ChartDataProps) {
   const totalItems = React.useMemo(() => {
     return props.data.reduce((acc, curr) => acc + curr.totalItems, 0);
   }, []);
+
   return (
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">
@@ -44,27 +45,33 @@ export function StockStatusChart(props: ChartDataProps) {
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-[250px]">
-          <PieChart>
-            <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
-            <Pie data={props.data} dataKey="totalItems" nameKey="status" innerRadius={60} strokeWidth={5}>
-              <Label
-                content={({ viewBox }) => {
-                  if (viewBox && 'cx' in viewBox && 'cy' in viewBox) {
-                    return (
-                      <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle" dominantBaseline="middle">
-                        <tspan x={viewBox.cx} y={viewBox.cy} className="fill-foreground text-3xl font-bold">
-                          {totalItems.toLocaleString()}
-                        </tspan>
-                        <tspan x={viewBox.cx} y={(viewBox.cy || 0) + 24} className="fill-muted-foreground">
-                          Itens no estoque
-                        </tspan>
-                      </text>
-                    );
-                  }
-                }}
-              />
-            </Pie>
-          </PieChart>
+          {totalItems > 0 ? (
+            <PieChart>
+              <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+              <Pie data={props.data} dataKey="totalItems" nameKey="status" innerRadius={60} strokeWidth={5}>
+                <Label
+                  content={({ viewBox }) => {
+                    if (viewBox && 'cx' in viewBox && 'cy' in viewBox) {
+                      return (
+                        <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle" dominantBaseline="middle">
+                          <tspan x={viewBox.cx} y={viewBox.cy} className="fill-foreground text-3xl font-bold">
+                            {totalItems.toLocaleString()}
+                          </tspan>
+                          <tspan x={viewBox.cx} y={(viewBox.cy || 0) + 24} className="fill-muted-foreground">
+                            Itens no estoque
+                          </tspan>
+                        </text>
+                      );
+                    }
+                  }}
+                />
+              </Pie>
+            </PieChart>
+          ) : (
+            <div className="flex w-full h-full items-center">
+              <p className="text-center text-lg">Sem dados, comece adicionando novos itens</p>
+            </div>
+          )}
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm">
