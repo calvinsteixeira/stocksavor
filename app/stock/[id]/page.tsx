@@ -14,7 +14,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { format, parse } from 'date-fns';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 const productSchema = yup.object({
   name: yup.string().required('campo obrigatório'),
@@ -63,10 +63,8 @@ export default function page(props: Props) {
   return (
     <div>
       <main className="space-y-12">
-        <div className="flex items-center py-4  bg-primary text-primary-foreground rounded-tl-3xl rounded-br-3xl relative">
-          <Icons.ArrowLeft className="absolute left-4 t-0 text-primary-foreground" onClick={() => router.push('/')} />
-          <h2 className="text-center w-full text-2xl font-extrabold">Detalhes do item</h2>
-        </div>
+        <Icons.ArrowLeft className="absolute left-4 t-0 text-primary" onClick={() => router.push('/')} />
+        <h2 className="text-primary w-full text-2xl font-semibold">Detalhes do item</h2>
         <div>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(updateProduct)} className="space-y-4">

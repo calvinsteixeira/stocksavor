@@ -99,13 +99,13 @@ export default function Home() {
           </h1>
         </div>
         <div className="space-y-8">
-          <h2 className="mt-12 text-2xl font-extrabold text-primary">Seu dashboard</h2>
+          <h2 className="mt-12 text-2xl font-semibold text-primary">Seu dashboard</h2>
           <div className="flex gap-3 justify-between items-center">
-            <Button className="flex-1 bg-primary gap-2">
+            <Button className="flex-1 gap-2">
               <Icons.Plus strokeWidth={1} />
               novo item
             </Button>
-            <Button className="flex-1 bg-[#10b981] gap-2">
+            <Button variant='secondary' className="flex-1 gap-2">
               <Icons.Box strokeWidth={1} />
               meu estoque
             </Button>
@@ -120,15 +120,15 @@ export default function Home() {
             <div className="flex justify-between">
               <div className="flex gap-2 items-center">
                 <div className="size-2 rounded-full bg-[#10b981]"></div>
-                <p className="text-sm">No prazo</p>
+                <p className="text-xs">No prazo</p>
               </div>
               <div className="flex gap-2 items-center">
                 <div className="size-2 rounded-full bg-[#b99d10]"></div>
-                <p className="text-sm">Próximo de vencer</p>
+                <p className="text-xs">Próximo de vencer</p>
               </div>
               <div className="flex gap-2 items-center">
                 <div className="size-2 rounded-full bg-[#b91010]"></div>
-                <p className="text-sm">Vencido</p>
+                <p className="text-xs">Vencido</p>
               </div>
             </div>
           </div>
