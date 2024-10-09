@@ -2,6 +2,10 @@ import { api } from "@/services/api"
 import { KitchenStaplesProps } from "@/types/Data"
 import { ApiResponse } from "@/services/api"
 
+interface DataResponse extends ApiResponse {
+  data: KitchenStaplesProps[]
+}
+
 export async function create(data: KitchenStaplesProps) {
   try {
     const result = await api.post('/kitchenstaples', data)

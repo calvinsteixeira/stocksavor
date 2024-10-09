@@ -1,3 +1,11 @@
 {
-  "kitchenstaples": []
+  "kitchenstaples": [
+    {
+      "id": "1657",
+      "name": "Creme de leite",
+      "amount": 13,
+      "description": "",
+      "expirationDate": "24/10/2024"
+    }
+  ]
 }

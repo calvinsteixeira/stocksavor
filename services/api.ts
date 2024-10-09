@@ -1,10 +1,4 @@
-import axios, { InternalAxiosRequestConfig } from 'axios'
-
-export interface ApiResponse {
-  hasError: boolean;
-  message: string;
-  data: []
-}
+import axios from 'axios'
 
 export const api = axios.create({
   baseURL: 'http://localhost:3001/',
@@ -12,30 +6,12 @@ export const api = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
-export interface ApiResponse {
+export interface ApiResponse<T = any> {
   hasError: boolean;
   status: number;
   message: string;
-  data: []
+  data: T[]
 }
-
-// adiciona timeout nas requests para simular uma conexão real
-api.interceptors.response.use(
-  (response) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(response);
-      }, 3000);
-    });
-  },
-  (error) => {
-    return new Promise((_, reject) => {
-      setTimeout(() => {
-        reject(error);
-      }, 3000);
-    });
-  }
-);
 
 
 

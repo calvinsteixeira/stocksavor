@@ -19,7 +19,7 @@ export function KitchenStaplesList(props: KitchenStaplesListProps) {
         const { message: expirationMessage, color: expirationColor } = getExpirationStatus(item.expirationDate);
 
         return (
-          <Link href={`/stock/${item.id}`} key={item.id} className="w-full flex pb-2 items-center justify-between border-b-2 border-muted">
+          <Link href={`/stock/product?id=${item.id}`} key={item.id} className="w-full flex pb-2 items-center justify-between border-b-2 border-muted">
             <div className="flex gap-2 items-center">
               <Icons.Apple className="size-8 mr-4" strokeWidth={1} />
               <div className="space-y-1">
