@@ -41,6 +41,7 @@ export default function page(props: Props) {
   const productId = urlParams.get('id') || '';
   const [productData, setProductData] = React.useState<KitchenStaplesProps | null>(null);
   const [editMode, setEditMode] = React.useState<boolean>(false);
+  const [allowSave, setAllowSave] = React.useState<boolean>(false);
 
   const form = useForm<FormData>({
     resolver: yupResolver(productSchema),
@@ -67,7 +68,19 @@ export default function page(props: Props) {
     getData();
   }, [productId]);
 
-  const updateProduct = (productData: FormData) => console.log(productData);
+  const updateProduct = (formData: FormData) => {
+    if (JSON.stringify(formData) === JSON.stringify(productData)) {
+      setEditMode(false);
+    }
+  };
+
+  React.useEffect(() => {
+    if (form.formState.isDirty) {
+      setAllowSave(true);
+    } else {
+      setAllowSave(false);
+    }
+  }, [form.formState]);
 
   return (
     <div>
@@ -150,7 +163,7 @@ export default function page(props: Props) {
                     {editMode ? 'Cancelar edição' : 'Editar informações'}
                   </Button>
                   {editMode && (
-                    <Button disabled={!editMode} type="submit">
+                    <Button disabled={editMode && !allowSave} type="submit">
                       Salvar dados
                     </Button>
                   )}
