@@ -68,12 +68,6 @@ export default function page(props: Props) {
     getData();
   }, [productId]);
 
-  const updateProduct = (formData: FormData) => {
-    if (JSON.stringify(formData) === JSON.stringify(productData)) {
-      setEditMode(false);
-    }
-  };
-
   React.useEffect(() => {
     if (form.formState.isDirty) {
       setAllowSave(true);
@@ -81,6 +75,8 @@ export default function page(props: Props) {
       setAllowSave(false);
     }
   }, [form.formState]);
+
+  const updateProduct = (formData: FormData) => {};
 
   return (
     <div>
