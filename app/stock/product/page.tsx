@@ -16,7 +16,7 @@ import { format, parse } from 'date-fns';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { kitchenstaplesActions } from '@/app/actions/kitchenstaples';
 import { KitchenStaplesProps } from '@/types/Data';
-import { ApiResponse } from '@/services/api';
+import { ApiResponse } from '@/network/api';
 
 const productSchema = yup.object({
   id: yup.string(),

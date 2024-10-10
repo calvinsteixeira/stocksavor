@@ -1,6 +1,6 @@
-import { api } from "@/services/api"
+import { api } from "@/network/api"
 import { KitchenStaplesProps } from "@/types/Data"
-import { ApiResponse } from "@/services/api"
+import { ApiResponse } from "@/network/api"
 
 interface DataResponse extends ApiResponse {
   data: KitchenStaplesProps[]

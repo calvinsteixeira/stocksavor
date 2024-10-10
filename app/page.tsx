@@ -9,7 +9,7 @@ import Link from 'next/link';
 import { ChartDataProps } from '@/components/charts/StockStatusChart';
 import { KitchenStaplesProps } from '@/types/Data';
 import { kitchenstaplesActions } from './actions/kitchenstaples';
-import { ApiResponse } from '@/services/api';
+import { ApiResponse } from '@/network/api';
 
 export default async function Home() {
   const {
