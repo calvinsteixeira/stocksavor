@@ -2,21 +2,27 @@ import { api } from "@/network/api"
 import { KitchenStaplesProps } from "@/types/Data"
 import { ApiResponse } from "@/network/api"
 
-interface DataResponse extends ApiResponse {
-  data: KitchenStaplesProps[]
-}
-
-export async function create(data: KitchenStaplesProps) {
+export async function create(data: KitchenStaplesProps): Promise<ApiResponse> {
   try {
     const result = await api.post('/kitchenstaples', data)
     if ([201, 200].includes(result.status)) {
-      return result
+      return {
+        status: result.status,
+        hasError: false,
+        message: "",
+        data: result.data
+      }
     } else {
       throw Error('Falha na criação do recurso')
     }
-  } catch (error) {
+  } catch (error: any) {
     console.log(error)
-    return error
+    return {
+      status: error.status,
+      hasError: true,
+      message: error.message,
+      data: []
+    }
   }
 }
 
@@ -52,7 +58,35 @@ export async function get(params: {
   } catch (error: any) {
     console.log(error)
     return {
-      status: 500,
+      status: error.status,
+      hasError: true,
+      message: error.message,
+      data: []
+    }
+  }
+}
+
+export async function put(data: KitchenStaplesProps, params: { id: string }): Promise<ApiResponse> {
+  console.log(data)
+  try {
+    const result = await api.put(`/kitchenstaples/${params.id}`, {
+      ...data  
+    })
+
+    if ([200, 201].includes(result.status)) {
+      return {
+        status: result.status,
+        hasError: false,
+        message: "",
+        data: result.data
+      }
+    } else {
+      throw Error('Falha ao criar novo produto')
+    }
+  } catch (error: any) {
+    console.log(error)
+    return {
+      status: error.status,
       hasError: true,
       message: error.message,
       data: []
@@ -62,5 +96,6 @@ export async function get(params: {
 
 export const kitchenstaplesActions = {
   create: create,
-  get: get
+  get: get,
+  put: put
 }

@@ -12,14 +12,15 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { format, parse } from 'date-fns';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { kitchenstaplesActions } from '@/app/actions/kitchenstaples';
 import { KitchenStaplesProps } from '@/types/Data';
 import { ApiResponse } from '@/network/api';
+import { formatDate, trimObjValues } from '@/lib/utils';
+import { useLoading } from '@/hooks/useLoading';
 
 const productSchema = yup.object({
-  id: yup.string(),
+  id: yup.string().required(),
   name: yup.string().required('campo obrigatório'),
   description: yup.string(),
   expirationDate: yup.string().required('campo obrigatório'),
@@ -36,6 +37,7 @@ type FormData = yup.InferType<typeof productSchema>;
 type Props = {};
 
 export default function page(props: Props) {
+  const { loading, withLoading } = useLoading()
   const router = useRouter();
   const urlParams = useSearchParams();
   const productId = urlParams.get('id') || '';
@@ -56,12 +58,12 @@ export default function page(props: Props) {
 
       form.reset({
         ...data,
-        expirationDate: format(parse(data?.expirationDate, 'dd/MM/yyyy', new Date()), 'yyyy-MM-dd'),
+        expirationDate: formatDate(data?.expirationDate, { originalFormat: 'dd/MM/yyyy', targetFormat: 'yyyy-MM-dd' }),
       });
 
       setProductData({
         ...data,
-        expirationDate: format(parse(data?.expirationDate, 'dd/MM/yyyy', new Date()), 'yyyy-MM-dd'),
+        expirationDate: formatDate(data?.expirationDate, { originalFormat: 'dd/MM/yyyy', targetFormat: 'yyyy-MM-dd' }),
       });
     }
 
@@ -76,7 +78,12 @@ export default function page(props: Props) {
     }
   }, [form.formState]);
 
-  const updateProduct = (formData: FormData) => {};
+  const updateProduct = async (formData: FormData) => {
+    const trimmedObj = trimObjValues(formData)
+    const brDateFormat = formatDate(trimmedObj?.expirationDate, { originalFormat: 'yyyy-MM-dd', targetFormat: 'dd/MM/yyyy' });
+    alert(JSON.stringify(trimmedObj))
+    withLoading(async () => kitchenstaplesActions.put({ ...trimmedObj, expirationDate: brDateFormat }, { id: productId }))
+  };
 
   return (
     <div>
@@ -155,12 +162,14 @@ export default function page(props: Props) {
                       }
                     }}
                     type="button"
+                    disabled={loading}
                   >
                     {editMode ? 'Cancelar edição' : 'Editar informações'}
                   </Button>
                   {editMode && (
-                    <Button disabled={editMode && !allowSave} type="submit">
-                      Salvar dados
+                    <Button disabled={editMode && !allowSave || loading} type="submit">
+                      {loading && <Icons.Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                      {loading ? 'Salvando os' : 'Salvar'} dados
                     </Button>
                   )}
                 </div>

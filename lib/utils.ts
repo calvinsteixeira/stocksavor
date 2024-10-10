@@ -1,17 +1,23 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { format, parse } from 'date-fns';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function formatDateBR(isoString: string) {
-  const [datePart, timePart] = isoString.split('T');
-  const [year, month, day] = datePart.split('-');
-  const [hour, minute] = timePart.split(':');
-
-  return `${day}/${month}/${year} às ${hour}:${minute}`;
+export function formatDate(date: string, params: { originalFormat: string, targetFormat: string }) {
+  return format(parse(date, params.originalFormat, new Date()), params.targetFormat);
 }
+
+export function trimObjValues<T extends Record<string, any>>(obj: T): T {
+  return Object.fromEntries(
+    Object.entries(obj).map(([key, value]) => 
+      typeof value === "string" ? [key, value.trim()] : [key, value]
+    )
+  ) as T;
+}
+
 
 export function getExpirationStatus(date: string): { message: string; color: string } {
   const [day, month, year] = date.split("/").map(Number);
