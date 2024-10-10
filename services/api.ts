@@ -1,7 +1,14 @@
 import axios from 'axios'
 
+// se você quiser acessar o projeto a partir de um navegador mobile porém rodar o servidor em um desktop
+// basta alterar o ipv4Server para o ip da sua máquina (os dois dispositivos precisam estar na mesma rede)
+const isClient = typeof window !== 'undefined';
+const ipv4Server = 'http://172.27.2.49:3001/'
+const isMobile = isClient && /Mobi|Android/i.test(navigator.userAgent);
+const baseURL = isMobile ? ipv4Server : 'http://localhost:3001/';
+
 export const api = axios.create({
-  baseURL: 'http://localhost:3001/',
+  baseURL: baseURL,
   timeout: 5000,
   headers: { 'Content-Type': 'application/json' },
 });
