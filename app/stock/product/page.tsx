@@ -37,12 +37,12 @@ type FormData = yup.InferType<typeof productSchema>;
 type Props = {};
 
 export default function page(props: Props) {
-  const { loading, withLoading } = useLoading()
+  const { loading, withLoading } = useLoading();
   const router = useRouter();
   const urlParams = useSearchParams();
   const productId = urlParams.get('id') || '';
   const [productData, setProductData] = React.useState<KitchenStaplesProps | null>(null);
-  const [editMode, setEditMode] = React.useState<boolean>(false);
+  const [allowEdit, setAllowEdit] = React.useState<boolean>(false);
   const [allowSave, setAllowSave] = React.useState<boolean>(false);
 
   const form = useForm<FormData>({
@@ -79,29 +79,57 @@ export default function page(props: Props) {
   }, [form.formState]);
 
   const updateProduct = async (formData: FormData) => {
-    const trimmedObj = trimObjValues(formData)
+    setAllowSave(false);
+    setAllowEdit(false);
+    const trimmedObj = trimObjValues(formData);
     const brDateFormat = formatDate(trimmedObj?.expirationDate, { originalFormat: 'yyyy-MM-dd', targetFormat: 'dd/MM/yyyy' });
-    alert(JSON.stringify(trimmedObj))
-    withLoading(async () => kitchenstaplesActions.put({ ...trimmedObj, expirationDate: brDateFormat }, { id: productId }))
+    await withLoading(async () => kitchenstaplesActions.put({ ...trimmedObj, expirationDate: brDateFormat }, { id: productId }));
+    form.reset(trimmedObj);
   };
 
   return (
     <div>
-      {productData && (
-        <main className="space-y-12">
-          <Icons.ArrowLeft className="absolute left-4 t-0 text-primary" onClick={() => router.push('/')} />
-          <h2 className="text-primary w-full text-2xl font-semibold">Detalhes do item</h2>
-          <div>
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(updateProduct)} className="space-y-4">
+      <main className="space-y-12">
+        <Icons.ArrowLeft className="absolute left-4 t-0 text-primary" onClick={() => router.push('/')} />
+        <h2 className="text-primary w-full text-2xl font-semibold">Detalhes do item</h2>
+        <div>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(updateProduct)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nome</FormLabel>
+                    <FormControl>
+                      <Input readOnly={!allowEdit} disabled={!allowEdit} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Descrição</FormLabel>
+                    <FormControl>
+                      <Textarea readOnly={!allowEdit} disabled={!allowEdit} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="flex gap-4">
                 <FormField
                   control={form.control}
-                  name="name"
+                  name="expirationDate"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Nome</FormLabel>
+                    <FormItem className="w-[60%]">
+                      <FormLabel>Data de validade</FormLabel>
                       <FormControl>
-                        <Input readOnly={!editMode} disabled={!editMode} {...field} />
+                        <Input readOnly={!allowEdit} disabled={!allowEdit} type="date" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -109,75 +137,47 @@ export default function page(props: Props) {
                 />
                 <FormField
                   control={form.control}
-                  name="description"
+                  name="amount"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Descrição</FormLabel>
+                    <FormItem className="flex-1">
+                      <FormLabel>Quantidade</FormLabel>
                       <FormControl>
-                        <Textarea readOnly={!editMode} disabled={!editMode} {...field} />
+                        <Input readOnly={!allowEdit} disabled={!allowEdit} type="number" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                <div className="flex gap-4">
-                  <FormField
-                    control={form.control}
-                    name="expirationDate"
-                    render={({ field }) => (
-                      <FormItem className="w-[60%]">
-                        <FormLabel>Data de validade</FormLabel>
-                        <FormControl>
-                          <Input readOnly={!editMode} disabled={!editMode} type="date" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="amount"
-                    render={({ field }) => (
-                      <FormItem className="flex-1">
-                        <FormLabel>Quantidade</FormLabel>
-                        <FormControl>
-                          <Input readOnly={!editMode} disabled={!editMode} type="number" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="space-x-2">
-                  <Button
-                    variant={'secondary'}
-                    onClick={() => {
-                      setEditMode(!editMode);
-                      if (editMode) {
-                        if (productData) {
-                          form.reset(productData);
-                        } else {
-                          form.reset();
-                        }
+              </div>
+              <div className="w-full space-x-2">
+                <Button
+                  variant={'secondary'}
+                  onClick={() => {
+                    setAllowEdit(!allowEdit);
+                    if (allowEdit) {
+                      if (productData) {
+                        form.reset(productData);
+                      } else {
+                        form.reset();
                       }
-                    }}
-                    type="button"
-                    disabled={loading}
-                  >
-                    {editMode ? 'Cancelar edição' : 'Editar informações'}
+                    }
+                  }}
+                  type="button"
+                  disabled={loading}
+                >
+                  {allowEdit ? 'Cancelar edição' : 'Editar informações'}
+                </Button>
+                {(allowEdit || loading) && (
+                  <Button disabled={(!allowEdit && !allowSave) || loading} type="submit">
+                    {loading && <Icons.Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    {loading ? 'Salvando' : 'Salvar'}
                   </Button>
-                  {editMode && (
-                    <Button disabled={editMode && !allowSave || loading} type="submit">
-                      {loading && <Icons.Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                      {loading ? 'Salvando os' : 'Salvar'} dados
-                    </Button>
-                  )}
-                </div>
-              </form>
-            </Form>
-          </div>
-        </main>
-      )}
+                )}
+              </div>
+            </form>
+          </Form>
+        </div>
+      </main>
     </div>
   );
 }
