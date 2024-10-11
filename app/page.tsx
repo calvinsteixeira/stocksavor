@@ -3,12 +3,11 @@ import * as Components from '@/components/index';
 import * as Icons from '@/icons';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
-import Link from 'next/link';
 
 //UTILS
 import { ChartDataProps } from '@/components/charts/StockStatusChart';
 import { KitchenStaplesProps } from '@/types/Data';
-import { kitchenstaplesActions } from './actions/kitchenstaples';
+import { getProduct } from './actions';
 import { ApiResponse } from '@/network/api';
 
 export default async function Home() {
@@ -16,10 +15,10 @@ export default async function Home() {
     data: fetchData,
     hasError: fetchHasError,
     status: fetchStatus,
-  }: ApiResponse = await kitchenstaplesActions.get({
+  }: ApiResponse = await getProduct({
     start: 0,
     limit: 5,
-  });
+  });  
 
   function categorizeStockByStatus(kitchenData: typeof fetchData): ChartDataProps {
     const today = new Date();

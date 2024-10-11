@@ -1,8 +1,11 @@
+'use server'
+
 import { api } from "@/network/api"
 import { KitchenStaplesProps } from "@/types/Data"
 import { ApiResponse } from "@/network/api"
+import { revalidatePath } from "next/cache"
 
-export async function create(data: KitchenStaplesProps): Promise<ApiResponse> {
+export async function createProduct(data: KitchenStaplesProps): Promise<ApiResponse> {
   try {
     const result = await api.post('/kitchenstaples', data)
     if ([201, 200].includes(result.status)) {
@@ -26,7 +29,7 @@ export async function create(data: KitchenStaplesProps): Promise<ApiResponse> {
   }
 }
 
-export async function get(params: {
+export async function getProduct(params: {
   id?: string;
   page?: number;
   per_page?: number;
@@ -43,7 +46,7 @@ export async function get(params: {
         _start: params?.start,
         _end: params?.end,
         _limit: params?.limit,
-      }      
+      }
     })
     if ([404, 200].includes(result.status)) {
       return {
@@ -66,7 +69,7 @@ export async function get(params: {
   }
 }
 
-export async function put(data: KitchenStaplesProps, params: { id: string }): Promise<ApiResponse> {
+export async function updateProduct(data: KitchenStaplesProps, params: { id: string }): Promise<ApiResponse> {
   try {
     const result = await api.put(`/kitchenstaples/${params.id}`, {
       ...data
@@ -93,7 +96,7 @@ export async function put(data: KitchenStaplesProps, params: { id: string }): Pr
   }
 }
 
-export async function remove(params: {
+export async function deleteProduct(params: {
   id: string;
 }): Promise<ApiResponse> {
   try {
@@ -117,12 +120,4 @@ export async function remove(params: {
       data: []
     }
   }
-}
-
-
-export const kitchenstaplesActions = {
-  create: create,
-  get: get,
-  put: put,
-  remove: remove
 }

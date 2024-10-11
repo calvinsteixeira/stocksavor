@@ -15,12 +15,13 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { kitchenstaplesActions } from '@/app/actions/kitchenstaples';
+import { deleteProduct, getProduct, updateProduct } from '@/app/actions';
 import { KitchenStaplesProps } from '@/types/Data';
 import { ApiResponse } from '@/network/api';
 import { formatDate, trimObjValues } from '@/lib/utils';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
+import { revalidatePath } from 'next/cache';
 
 const productSchema = yup.object({
   id: yup.string().required(),
@@ -49,8 +50,8 @@ export default function page() {
   });
 
   async function getProductData(): Promise<ApiResponse<KitchenStaplesProps>> {
-    const result = await kitchenstaplesActions.get({
-      id: 'productId',
+    const result = await getProduct({
+      id: productId,
     });
 
     form.reset({
@@ -85,25 +86,18 @@ export default function page() {
     if (productDataError) {
       toast.error('Falha no carregamento dos dados');
     }
-  }, [productDataError]);
-
-  const updateProduct = async (data: FormData, productId: string) => {
-    await kitchenstaplesActions.put({ ...data }, { id: productId });
-  };
-
-  const deleteProduct = async (productId: string) => {
-    await kitchenstaplesActions.remove({ id: productId });
-  };
+  }, [productDataError]);  
 
   const deleteProductMutation = useMutation({
-    mutationFn: async ({ productId }: { productId: string }) => await deleteProduct(productId),
+    mutationFn: async ({ productId }: { productId: string }) => await deleteProduct({ id: productId }),
     onSuccess: () => {
       toast.success('Produto removido com sucesso');
+      router.push('/')
     },
   });
 
   const updateProductMutation = useMutation({
-    mutationFn: async ({ data, productId }: { data: KitchenStaplesProps; productId: string }) => await updateProduct(data, productId),
+    mutationFn: async ({ data, productId }: { data: KitchenStaplesProps; productId: string }) => await updateProduct(data, { id: productId }),
     onMutate: () => {
       setAllowEdit(false);
       setAllowSave(false);
@@ -124,6 +118,7 @@ export default function page() {
   };
 
   const handleDeleteProduct = (productId: string) => {
+    // router.prefetch('/')
     deleteProductMutation.mutate({ productId: productId });
   };
 
