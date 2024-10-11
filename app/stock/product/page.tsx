@@ -92,14 +92,25 @@ export default function page() {
     await kitchenstaplesActions.put({ ...data }, { id: productId });
   };
 
-  const productMutation = useMutation({
+  const deleteProduct = async (productId: string) => {
+    await kitchenstaplesActions.remove({ id: productId });
+  };
+
+  const deleteProductMutation = useMutation({
+    mutationFn: async ({ productId }: { productId: string }) => await deleteProduct(productId),
+    onSuccess: () => {
+      toast.success('Produto removido com sucesso');
+    },
+  });
+
+  const updateProductMutation = useMutation({
     mutationFn: async ({ data, productId }: { data: KitchenStaplesProps; productId: string }) => await updateProduct(data, productId),
     onMutate: () => {
       setAllowEdit(false);
       setAllowSave(false);
     },
     onSuccess: () => {
-      toast.success('Dados atualizados com sucesso');
+      toast.success('Dados atualizados com sucesso');      
     },
   });
 
@@ -110,7 +121,11 @@ export default function page() {
       expirationDate: formatDate(trimmedObj?.expirationDate, { originalFormat: 'yyyy-MM-dd', targetFormat: 'dd/MM/yyyy' }), // The date input only accepts dates in the US format, so it needs to be converted before being saved in the database
     };
 
-    productMutation.mutate({ data: sanitizedData, productId: productId });
+    updateProductMutation.mutate({ data: sanitizedData, productId: productId });
+  };
+
+  const handleDeleteProduct = (productId: string) => {
+    deleteProductMutation.mutate({ productId: productId });
   };
 
   return (
@@ -190,10 +205,10 @@ export default function page() {
                   />
                 </div>
                 <div className="w-full flex flex-wrap gap-2 items-center">
-                  {(allowEdit || productMutation.isPending) && (
-                    <Button disabled={!allowSave || productMutation.isPending} type="submit">
-                      {productMutation.isPending && <Icons.Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                      {productMutation.isPending ? 'Salvando' : 'Salvar'}
+                  {(allowEdit || updateProductMutation.isPending) && (
+                    <Button disabled={!allowSave || updateProductMutation.isPending} type="submit">
+                      {updateProductMutation.isPending && <Icons.Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                      {updateProductMutation.isPending ? 'Salvando' : 'Salvar'}
                     </Button>
                   )}
                   <Button
@@ -215,13 +230,27 @@ export default function page() {
                       }
                     }}
                     type="button"
-                    disabled={productMutation.isPending}
+                    disabled={updateProductMutation.isPending || deleteProductMutation.isPending}
                   >
                     {allowEdit ? 'Cancelar edição' : 'Editar informações'}
                   </Button>
-                  <Componenets.ConfirmationDialog confirmText="Remover" title="Confirmação" description="Deseja remover esse produto?" onConfirm={() => {}}>
-                    <Button variant={'destructive'}>
-                      <Icons.Trash2 className="size-4" />
+                  <Componenets.ConfirmationDialog
+                    confirmText="Remover"
+                    title="Confirmação"
+                    description="Deseja remover esse produto?"
+                    onConfirm={() => {
+                      handleDeleteProduct(productId);
+                    }}
+                  >
+                    <Button variant={'destructive'} disabled={updateProductMutation.isPending || deleteProductMutation.isPending}>
+                      {deleteProductMutation.isPending ? (
+                        <>
+                          <Icons.Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Deletando
+                        </>
+                      ) : (
+                        <Icons.Trash2 className="size-4" />
+                      )}
                     </Button>
                   </Componenets.ConfirmationDialog>
                 </div>

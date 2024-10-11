@@ -43,7 +43,7 @@ export async function get(params: {
         _start: params?.start,
         _end: params?.end,
         _limit: params?.limit,
-      }
+      }      
     })
     if ([404, 200].includes(result.status)) {
       return {
@@ -93,9 +93,36 @@ export async function put(data: KitchenStaplesProps, params: { id: string }): Pr
   }
 }
 
+export async function remove(params: {
+  id: string;
+}): Promise<ApiResponse> {
+  try {
+    const result = await api.delete(`/kitchenstaples/${params.id}`);
+    if ([404, 200, 204].includes(result.status)) {
+      return {
+        status: result.status,
+        hasError: false,
+        message: "",
+        data: result.data
+      }
+    } else {
+      throw Error('Falha ao deletar os produto')
+    }
+  } catch (error: any) {
+    console.log(error)
+    return {
+      status: error.status,
+      hasError: true,
+      message: error.message,
+      data: []
+    }
+  }
+}
+
 
 export const kitchenstaplesActions = {
   create: create,
   get: get,
-  put: put
+  put: put,
+  remove: remove
 }
