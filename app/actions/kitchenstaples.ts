@@ -67,32 +67,32 @@ export async function get(params: {
 }
 
 export async function put(data: KitchenStaplesProps, params: { id: string }): Promise<ApiResponse> {
-  console.log(data)
   try {
     const result = await api.put(`/kitchenstaples/${params.id}`, {
-      ...data  
-    })
+      ...data
+    });
 
     if ([200, 201].includes(result.status)) {
       return {
         status: result.status,
         hasError: false,
         message: "",
-        data: result.data
-      }
+        data: result.data,
+      };
     } else {
-      throw Error('Falha ao criar novo produto')
+      throw new Error('Falha ao criar novo produto');
     }
   } catch (error: any) {
-    console.log(error)
+    console.log(error);
     return {
       status: error.status,
       hasError: true,
       message: error.message,
-      data: []
-    }
+      data: [],
+    };
   }
 }
+
 
 export const kitchenstaplesActions = {
   create: create,

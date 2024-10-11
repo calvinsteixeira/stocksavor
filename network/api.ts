@@ -15,11 +15,11 @@ export const api = axios.create({
 
 api.interceptors.response.use(
   async response => {
-    await new Promise(resolve => setTimeout(resolve, 3000));
+    await new Promise(resolve => setTimeout(resolve, 2000));
     return response;
   },
   async error => {
-    await new Promise(resolve => setTimeout(resolve, 3000));
+    await new Promise(resolve => setTimeout(resolve, 2000));
     return Promise.reject(error);
   }
 );

@@ -21,7 +21,7 @@ export default async function Home() {
     limit: 5,
   });
 
-  function categorizeStock(kitchenData: typeof fetchData): ChartDataProps {
+  function categorizeStockByStatus(kitchenData: typeof fetchData): ChartDataProps {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
@@ -55,7 +55,7 @@ export default async function Home() {
     };
   }
 
-  const StockStatusChartData = fetchData ? categorizeStock(fetchData) : null;
+  const StockStatusChartData = fetchData ? categorizeStockByStatus(fetchData) : null;
 
   return (
     <div>

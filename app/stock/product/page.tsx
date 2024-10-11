@@ -18,7 +18,8 @@ import { kitchenstaplesActions } from '@/app/actions/kitchenstaples';
 import { KitchenStaplesProps } from '@/types/Data';
 import { ApiResponse } from '@/network/api';
 import { formatDate, trimObjValues } from '@/lib/utils';
-import { useLoading } from '@/hooks/useLoading';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
 
 const productSchema = yup.object({
   id: yup.string().required(),
@@ -38,7 +39,6 @@ type FormData = yup.InferType<typeof productSchema>;
 type Props = {};
 
 export default function page(props: Props) {
-  const { loading, withLoading } = useLoading();
   const router = useRouter();
   const urlParams = useSearchParams();
   const productId = urlParams.get('id') || '';
@@ -50,26 +50,30 @@ export default function page(props: Props) {
     resolver: yupResolver(productSchema),
   });
 
-  React.useEffect(() => {
-    async function getData() {
-      const result: ApiResponse<KitchenStaplesProps> = await kitchenstaplesActions.get({
-        id: productId,
-      });
-      const data = result.data[0];
+  async function getProductData(): Promise<ApiResponse<KitchenStaplesProps>> {
+    const result = await kitchenstaplesActions.get({
+      id: 'productId',
+    });
 
-      form.reset({
-        ...data,
-        expirationDate: formatDate(data?.expirationDate, { originalFormat: 'dd/MM/yyyy', targetFormat: 'yyyy-MM-dd' }),
-      });
+    form.reset({
+      ...result.data[0],
+      expirationDate: formatDate(result.data[0]?.expirationDate, {
+        originalFormat: 'dd/MM/yyyy',
+        targetFormat: 'yyyy-MM-dd',
+      }),
+    });
 
-      setProductData({
-        ...data,
-        expirationDate: formatDate(data?.expirationDate, { originalFormat: 'dd/MM/yyyy', targetFormat: 'yyyy-MM-dd' }),
-      });
-    }
+    return result;
+  }
 
-    getData();
-  }, [productId]);
+  const {
+    data: productDataResponse,
+    isLoading: productDataIsLoading,
+    error: productDataError,
+  } = useQuery<ApiResponse<KitchenStaplesProps>>({
+    queryKey: ['product'],
+    queryFn: getProductData,
+  });
 
   React.useEffect(() => {
     if (form.formState.isDirty) {
@@ -79,13 +83,35 @@ export default function page(props: Props) {
     }
   }, [form.formState]);
 
-  const updateProduct = async (formData: FormData) => {
-    setAllowSave(false);
-    setAllowEdit(false);
+  React.useEffect(() => {
+    if (productDataError) {
+      toast.error('Falha no carregamento dos dados');
+    }
+  }, [productDataError]);
+
+  const updateProduct = async (data: FormData, productId: string) => {
+    await kitchenstaplesActions.put({ ...data }, { id: productId });
+  };
+
+  const productMutation = useMutation({
+    mutationFn: async ({ data, productId }: { data: KitchenStaplesProps; productId: string }) => await updateProduct(data, productId),
+    onMutate: () => {
+      setAllowEdit(false);
+      setAllowSave(false);
+    },
+    onSuccess: () => {
+      toast.success('Dados atualizados com sucesso');
+    },
+  });
+
+  const submitForm = async (formData: FormData) => {
     const trimmedObj = trimObjValues(formData);
-    const brDateFormat = formatDate(trimmedObj?.expirationDate, { originalFormat: 'yyyy-MM-dd', targetFormat: 'dd/MM/yyyy' });
-    await withLoading(async () => kitchenstaplesActions.put({ ...trimmedObj, expirationDate: brDateFormat }, { id: productId }));
-    form.reset(trimmedObj);
+    const sanitizedData: FormData = {
+      ...trimmedObj,
+      expirationDate: formatDate(trimmedObj?.expirationDate, { originalFormat: 'yyyy-MM-dd', targetFormat: 'dd/MM/yyyy' }), // The date input only accepts dates in the US format, so it needs to be converted before being saved in the database
+    };
+
+    productMutation.mutate({ data: sanitizedData, productId: productId });
   };
 
   return (
@@ -94,22 +120,22 @@ export default function page(props: Props) {
         <Icons.ArrowLeft className="absolute left-4 t-0 text-primary" onClick={() => router.push('/')} />
         <h2 className="text-primary w-full text-2xl font-semibold">Detalhes do item</h2>
         <div>
-          {!productData ? (
+          {productDataIsLoading ? (
             <div className="space-y-4">
-              <Skeleton className="h-12 w-full"/>
-              <Skeleton className="h-24 w-full"/>
+              <Skeleton className="h-12 w-full" />
+              <Skeleton className="h-24 w-full" />
               <div className="flex gap-4">
-                <Skeleton className="h-12 w-[60%]"/>
-                <Skeleton className="h-12 flex-1"/>
+                <Skeleton className="h-12 w-[60%]" />
+                <Skeleton className="h-12 flex-1" />
               </div>
               <div className="flex gap-4">
-                <Skeleton className="h-12 w-28"/>
-                <Skeleton className="h-12 w-28"/>
+                <Skeleton className="h-12 w-28" />
+                <Skeleton className="h-12 w-28" />
               </div>
             </div>
           ) : (
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(updateProduct)} className="space-y-4">
+              <form onSubmit={form.handleSubmit(submitForm)} className="space-y-4">
                 <FormField
                   control={form.control}
                   name="name"
@@ -170,22 +196,28 @@ export default function page(props: Props) {
                     onClick={() => {
                       setAllowEdit(!allowEdit);
                       if (allowEdit) {
-                        if (productData) {
-                          form.reset(productData);
+                        if (productDataResponse?.data[0]) {
+                          form.reset({
+                            ...productDataResponse.data[0],
+                            expirationDate: formatDate(productDataResponse.data[0].expirationDate, {
+                              originalFormat: 'dd/MM/yyyy',
+                              targetFormat: 'yyyy-MM-dd',
+                            }),
+                          });
                         } else {
                           form.reset();
                         }
                       }
                     }}
                     type="button"
-                    disabled={loading}
+                    disabled={productMutation.isPending}
                   >
                     {allowEdit ? 'Cancelar edição' : 'Editar informações'}
                   </Button>
-                  {(allowEdit || loading) && (
-                    <Button disabled={(!allowEdit && !allowSave) || loading} type="submit">
-                      {loading && <Icons.Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                      {loading ? 'Salvando' : 'Salvar'}
+                  {(allowEdit || productMutation.isPending) && (
+                    <Button disabled={!allowSave || productMutation.isPending} type="submit">
+                      {productMutation.isPending && <Icons.Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                      {productMutation.isPending ? 'Salvando' : 'Salvar'}
                     </Button>
                   )}
                 </div>
