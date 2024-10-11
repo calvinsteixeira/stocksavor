@@ -41,7 +41,6 @@ export default function page() {
   const router = useRouter();
   const urlParams = useSearchParams();
   const productId = urlParams.get('id') || '';
-  const [productData, setProductData] = React.useState<KitchenStaplesProps | null>(null);
   const [allowEdit, setAllowEdit] = React.useState<boolean>(false);
   const [allowSave, setAllowSave] = React.useState<boolean>(false);
 
