@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import * as Icons from '@/icons';
 import { Skeleton } from '@/components/ui/skeleton';
+import * as Componenets from '@/components/index';
 
 //UTILS
 import React from 'react';
@@ -36,9 +37,7 @@ const productSchema = yup.object({
 
 type FormData = yup.InferType<typeof productSchema>;
 
-type Props = {};
-
-export default function page(props: Props) {
+export default function page() {
   const router = useRouter();
   const urlParams = useSearchParams();
   const productId = urlParams.get('id') || '';
@@ -190,7 +189,13 @@ export default function page(props: Props) {
                     )}
                   />
                 </div>
-                <div className="w-full space-x-2">
+                <div className="w-full flex flex-wrap gap-2 items-center">
+                  {(allowEdit || productMutation.isPending) && (
+                    <Button disabled={!allowSave || productMutation.isPending} type="submit">
+                      {productMutation.isPending && <Icons.Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                      {productMutation.isPending ? 'Salvando' : 'Salvar'}
+                    </Button>
+                  )}
                   <Button
                     variant={'secondary'}
                     onClick={() => {
@@ -214,12 +219,11 @@ export default function page(props: Props) {
                   >
                     {allowEdit ? 'Cancelar edição' : 'Editar informações'}
                   </Button>
-                  {(allowEdit || productMutation.isPending) && (
-                    <Button disabled={!allowSave || productMutation.isPending} type="submit">
-                      {productMutation.isPending && <Icons.Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                      {productMutation.isPending ? 'Salvando' : 'Salvar'}
+                  <Componenets.ConfirmationDialog confirmText="Remover" title="Confirmação" description="Deseja remover esse produto?" onConfirm={() => {}}>
+                    <Button variant={'destructive'}>
+                      <Icons.Trash2 className="size-4" />
                     </Button>
-                  )}
+                  </Componenets.ConfirmationDialog>
                 </div>
               </form>
             </Form>

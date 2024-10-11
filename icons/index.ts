@@ -1,1 +1,1 @@
-export { Apple, TicketCheck, Plus, Box, ArrowLeft, Unplug, Loader2 } from 'lucide-react'
+export { Apple, TicketCheck, Plus, Box, ArrowLeft, Unplug, Loader2, Trash2 } from 'lucide-react'

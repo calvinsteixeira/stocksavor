@@ -14,59 +14,60 @@ body {
 
 @layer base {
   :root {
-    --background: 120 20% 98%; /* Verde suave */
-    --foreground: 30 20% 20%; /* Marrom escuro */
-    --card: 120 20% 100%; /* Branco */
-    --card-foreground: 30 20% 20%; /* Marrom escuro */
-    --popover: 120 20% 100%; /* Branco */
-    --popover-foreground: 30 20% 20%; /* Marrom escuro */
-    --primary: 4 82% 56%; /* Laranja suave */
-    --primary-foreground: 0 0% 98%; /* Branco */
-    --secondary: 120 10% 90%; /* Verde muito claro */
-    --secondary-foreground: 30 20% 20%; /* Marrom escuro */
-    --muted: 120 10% 90%; /* Verde muito claro */
-    --muted-foreground: 120 15% 50%; /* Verde médio */
-    --accent: 120 30% 40%; /* Verde mais forte */
-    --accent-foreground: 0 0% 98%; /* Branco */
-    --destructive: 0 84% 60%; /* Vermelho */
-    --destructive-foreground: 0 0% 98%; /* Branco */
-    --border: 120 10% 85%; /* Verde claro */
-    --input: 120 10% 85%; /* Verde claro */
-    --ring: 120 20% 20%; /* Marrom escuro */
-    --chart-1: 30 76% 61%; /* Laranja gráfico */
-    --chart-2: 90 58% 39%; /* Verde gráfico */
-    --chart-3: 197 37% 24%; /* Azul gráfico */
-    --chart-4: 43 74% 66%; /* Verde claro gráfico */
-    --chart-5: 27 87% 67%; /* Amarelo gráfico */
+    --background: 200 20% 95%; /* Azul suave */
+    --foreground: 210 15% 20%; /* Cinza azulado escuro */
+    --card: 200 20% 98%; /* Branco azulado */
+    --card-foreground: 210 15% 20%; /* Cinza azulado escuro */
+    --popover: 200 20% 98%; /* Branco azulado */
+    --popover-foreground: 210 15% 20%; /* Cinza azulado escuro */
+    --primary: 340 82% 62%; /* Rosa vibrante */
+    --primary-foreground: 0 0% 100%; /* Branco puro */
+    --secondary: 200 10% 85%; /* Azul muito claro */
+    --secondary-foreground: 210 15% 20%; /* Cinza azulado escuro */
+    --muted: 200 10% 85%; /* Azul muito claro */
+    --muted-foreground: 200 20% 50%; /* Azul médio */
+    --accent: 250 30% 50%; /* Roxo suave */
+    --accent-foreground: 0 0% 100%; /* Branco puro */
+    --destructive: 0 84% 55%; /* Vermelho vibrante */
+    --destructive-foreground: 0 0% 100%; /* Branco puro */
+    --border: 200 10% 80%; /* Azul claro */
+    --input: 200 10% 80%; /* Azul claro */
+    --ring: 210 15% 20%; /* Cinza azulado escuro */
+    --chart-1: 30 76% 68%; /* Laranja gráfico */
+    --chart-2: 140 45% 45%; /* Verde gráfico */
+    --chart-3: 230 50% 45%; /* Azul gráfico */
+    --chart-4: 320 60% 55%; /* Rosa gráfico */
+    --chart-5: 45 87% 65%; /* Amarelo gráfico */
     --radius: 0.5rem;
   }
   .dark {
-    --background: 30 20% 15%; /* Marrom escuro */
-    --foreground: 120 30% 90%; /* Verde claro */
-    --card: 30 20% 15%; /* Marrom escuro */
-    --card-foreground: 120 30% 90%; /* Verde claro */
-    --popover: 30 20% 15%; /* Marrom escuro */
-    --popover-foreground: 120 30% 90%; /* Verde claro */
-    --primary: 30 100% 40%; /* Laranja profundo */
-    --primary-foreground: 0 0% 98%; /* Branco */
-    --secondary: 120 10% 20%; /* Verde escuro */
-    --secondary-foreground: 0 0% 98%; /* Branco */
-    --muted: 120 10% 20%; /* Verde escuro */
-    --muted-foreground: 120 15% 70%; /* Verde médio */
-    --accent: 120 30% 30%; /* Verde escuro */
-    --accent-foreground: 0 0% 98%; /* Branco */
-    --destructive: 0 62% 40%; /* Vermelho escuro */
-    --destructive-foreground: 0 0% 98%; /* Branco */
-    --border: 120 10% 20%; /* Verde escuro */
-    --input: 120 10% 20%; /* Verde escuro */
-    --ring: 120 15% 70%; /* Verde médio */
-    --chart-1: 30 76% 50%; /* Laranja gráfico */
-    --chart-2: 90 58% 45%; /* Verde gráfico */
-    --chart-3: 30 80% 50%; /* Amarelo gráfico */
-    --chart-4: 280 65% 60%; /* Roxo gráfico */
-    --chart-5: 340 75% 55%; /* Vermelho gráfico */
+    --background: 210 15% 12%; /* Cinza azulado escuro */
+    --foreground: 200 20% 90%; /* Azul claro */
+    --card: 210 15% 12%; /* Cinza azulado escuro */
+    --card-foreground: 200 20% 90%; /* Azul claro */
+    --popover: 210 15% 12%; /* Cinza azulado escuro */
+    --popover-foreground: 200 20% 90%; /* Azul claro */
+    --primary: 340 82% 48%; /* Rosa escuro */
+    --primary-foreground: 0 0% 100%; /* Branco puro */
+    --secondary: 200 10% 20%; /* Azul escuro */
+    --secondary-foreground: 0 0% 100%; /* Branco puro */
+    --muted: 200 10% 20%; /* Azul escuro */
+    --muted-foreground: 200 15% 65%; /* Azul médio */
+    --accent: 250 30% 40%; /* Roxo escuro */
+    --accent-foreground: 0 0% 100%; /* Branco puro */
+    --destructive: 0 62% 45%; /* Vermelho escuro */
+    --destructive-foreground: 0 0% 100%; /* Branco puro */
+    --border: 200 10% 20%; /* Azul escuro */
+    --input: 200 10% 20%; /* Azul escuro */
+    --ring: 200 20% 65%; /* Azul médio */
+    --chart-1: 30 76% 55%; /* Laranja gráfico */
+    --chart-2: 140 45% 50%; /* Verde gráfico */
+    --chart-3: 30 80% 55%; /* Amarelo gráfico */
+    --chart-4: 280 65% 65%; /* Roxo gráfico */
+    --chart-5: 340 75% 50%; /* Rosa gráfico */
   }
 }
+
 
 @layer base {
   * {
