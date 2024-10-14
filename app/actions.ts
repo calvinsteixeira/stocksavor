@@ -5,10 +5,15 @@ import { KitchenStaplesProps } from "@/types/Data"
 import { ApiResponse } from "@/network/api"
 import { revalidatePath } from "next/cache"
 
-export async function createProduct(data: KitchenStaplesProps): Promise<ApiResponse> {
+export async function createProduct(data: Omit<KitchenStaplesProps, 'id'>, options?: {
+  revalidatePath?: string
+}): Promise<ApiResponse> {
   try {
     const result = await api.post('/kitchenstaples', data)
     if ([201, 200].includes(result.status)) {
+      if (options?.revalidatePath) {
+        revalidatePath(options?.revalidatePath)
+      }
       return {
         status: result.status,
         hasError: false,
@@ -69,13 +74,16 @@ export async function getProduct(params: {
   }
 }
 
-export async function updateProduct(data: KitchenStaplesProps, params: { id: string }): Promise<ApiResponse> {
+export async function updateProduct(data: KitchenStaplesProps, params: { id: string }, options?: { revalidatePath?: string }): Promise<ApiResponse> {
   try {
     const result = await api.put(`/kitchenstaples/${params.id}`, {
       ...data
     });
 
     if ([200, 201].includes(result.status)) {
+      if (options?.revalidatePath) {
+        revalidatePath(options?.revalidatePath)
+      }
       return {
         status: result.status,
         hasError: false,
@@ -98,10 +106,14 @@ export async function updateProduct(data: KitchenStaplesProps, params: { id: str
 
 export async function deleteProduct(params: {
   id: string;
-}): Promise<ApiResponse> {
+  
+}, options?: { revalidatePath?: string; }): Promise<ApiResponse> {
   try {
     const result = await api.delete(`/kitchenstaples/${params.id}`);
     if ([404, 200, 204].includes(result.status)) {
+      if (options?.revalidatePath) {
+        revalidatePath(options?.revalidatePath)
+      }
       return {
         status: result.status,
         hasError: false,

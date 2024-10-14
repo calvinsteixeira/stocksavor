@@ -21,7 +21,6 @@ import { ApiResponse } from '@/network/api';
 import { formatDate, trimObjValues } from '@/lib/utils';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
-import { revalidatePath } from 'next/cache';
 
 const productSchema = yup.object({
   id: yup.string().required(),
@@ -70,7 +69,7 @@ export default function page() {
     isLoading: productDataIsLoading,
     error: productDataError,
   } = useQuery<ApiResponse<KitchenStaplesProps>>({
-    queryKey: ['product'],
+    queryKey: ['getProduct'],
     queryFn: getProductData,
   });
 
@@ -86,24 +85,25 @@ export default function page() {
     if (productDataError) {
       toast.error('Falha no carregamento dos dados');
     }
-  }, [productDataError]);  
+  }, [productDataError]);
 
   const deleteProductMutation = useMutation({
-    mutationFn: async ({ productId }: { productId: string }) => await deleteProduct({ id: productId }),
+    mutationFn: async ({ productId }: { productId: string }) => await deleteProduct({ id: productId }, { revalidatePath: '/' }),
     onSuccess: () => {
       toast.success('Produto removido com sucesso');
-      router.push('/')
+      router.push('/');
     },
   });
 
   const updateProductMutation = useMutation({
-    mutationFn: async ({ data, productId }: { data: KitchenStaplesProps; productId: string }) => await updateProduct(data, { id: productId }),
+    mutationFn: async ({ data, productId }: { data: KitchenStaplesProps; productId: string }) =>
+      await updateProduct(data, { id: productId }, { revalidatePath: '/' }),
     onMutate: () => {
       setAllowEdit(false);
       setAllowSave(false);
     },
     onSuccess: () => {
-      toast.success('Dados atualizados com sucesso');      
+      toast.success('Dados atualizados com sucesso');
     },
   });
 
@@ -118,7 +118,6 @@ export default function page() {
   };
 
   const handleDeleteProduct = (productId: string) => {
-    // router.prefetch('/')
     deleteProductMutation.mutate({ productId: productId });
   };
 

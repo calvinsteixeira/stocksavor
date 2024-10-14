@@ -1,11 +1,10 @@
 {
   "kitchenstaples": [
     {
-      "id": "1657",
-      "name": "U",
-      "amount": 13,
-      "description": "",
-      "expirationDate": "30/10/2024"
+      "id": "af70",
+      "amount": 9,
+      "expirationDate": "31/10/2024",
+      "name": "Teste"
     }
   ]
 }

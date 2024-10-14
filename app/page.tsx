@@ -3,6 +3,7 @@ import * as Components from '@/components/index';
 import * as Icons from '@/icons';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
+import Link from 'next/link';
 
 //UTILS
 import { ChartDataProps } from '@/components/charts/StockStatusChart';
@@ -18,7 +19,7 @@ export default async function Home() {
   }: ApiResponse = await getProduct({
     start: 0,
     limit: 5,
-  });  
+  });
 
   function categorizeStockByStatus(kitchenData: typeof fetchData): ChartDataProps {
     const today = new Date();
@@ -87,9 +88,10 @@ export default async function Home() {
             <div className="space-y-8">
               <h2 className="mt-12 text-2xl font-semibold text-primary">Seu dashboard</h2>
               <div className="flex gap-3 justify-between items-center">
-                <Button className="flex-1 gap-2">
-                  <Icons.Plus strokeWidth={1} />
-                  novo item
+                <Button asChild className="flex-1 gap-2">
+                  <Link href={'/stock/create'}>
+                    <Icons.Plus strokeWidth={1} /> novo item
+                  </Link>
                 </Button>
                 <Button variant="secondary" className="flex-1 gap-2">
                   <Icons.Box strokeWidth={1} />
